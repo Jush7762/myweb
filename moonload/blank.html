@@ -1,0 +1,416 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Joshua Web Math</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(180deg, #87CEEB, #E0F6FF);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                overflow-x: hidden;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .title {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                font-size: clamp(18px, 5vw, 24px);
+                font-weight: bold;
+                color: rgba(74, 74, 74, 0.8);
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                background: linear-gradient(45deg, rgba(255, 107, 107, 0.9), rgba(78, 205, 196, 0.9));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                transition: transform 0.3s ease;
+            }
+            .title:hover {
+                transform: translateY(-5px) rotate(5deg);
+            }
+            .button-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+                padding: 1rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                max-width: 100%;
+            }
+            .quarter-button {
+                background-color: rgba(255, 255, 255, 0.8);
+                color: rgba(74, 74, 74, 0.9);
+                border: none;
+                padding: 10px 20px;
+                margin: 10px;
+                border-radius: 5px;
+                font-size: clamp(14px, 4vw, 16px);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            .quarter-button:hover {
+                background: linear-gradient(135deg, rgba(51, 51, 51, 0.9), rgba(102, 102, 102, 0.9));
+                color: rgba(255, 255, 255, 0.9);
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+            .quarter-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .quarter-button:hover::before {
+                transform: translateX(100%);
+            }
+            @keyframes pulse {
+                0%, 100% { transform: translateY(-5px) scale(1); }
+                50% { transform: translateY(-5px) scale(1.05); }
+            }
+            .quarter-button:hover {
+                animation: pulse 0.6s infinite;
+            }
+            .sun {
+                position: absolute;
+                top: 50px;
+                left: 50px;
+                width: 80px;
+                height: 80px;
+                background: radial-gradient(circle, rgba(255, 255, 0, 1), rgba(255, 165, 0, 1));
+                border-radius: 50%;
+                box-shadow: 0 0 70px rgba(255, 255, 0, 0.8);
+                animation: shine 5s infinite alternate;
+            }
+            .sun::after {
+                content: '';
+                position: absolute;
+                top: -30px;
+                left: -30px;
+                right: -30px;
+                bottom: -30px;
+                background: radial-gradient(circle, rgba(255, 255, 0, 0.6), transparent 70%);
+                border-radius: 50%;
+                animation: pulse-glow 4s infinite alternate;
+            }
+            @keyframes shine {
+                0% { transform: scale(1); }
+                100% { transform: scale(1.2); }
+            }
+            @keyframes pulse-glow {
+                0% { transform: scale(1); opacity: 0.6; }
+                100% { transform: scale(1.3); opacity: 0.9; }
+            }
+            .cloud {
+                position: absolute;
+                top: 10%;
+                width: 100px;
+                height: 30px;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 50px;
+                box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
+                animation: float 30s linear infinite;
+            }
+            .cloud::before,
+            .cloud::after {
+                content: '';
+                position: absolute;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+            }
+            .cloud::before {
+                width: 30px;
+                height: 30px;
+                top: -15px;
+                left: 10px;
+            }
+            .cloud::after {
+                width: 50px;
+                height: 50px;
+                top: -25px;
+                right: 10px;
+            }
+            @keyframes float {
+                0% { transform: translateX(-150px); }
+                100% { transform: translateX(calc(100vw + 150px)); }
+            }
+            .grass-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 80px;
+                overflow: hidden;
+                z-index: 1;
+            }
+            .ground {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 30px;
+                background: linear-gradient(to bottom, rgba(139, 69, 19, 1), rgba(101, 67, 33, 1));
+                border-top: 2px solid rgba(160, 82, 45, 1);
+            }
+            .ground::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 100%;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0 C 20 8, 40 12, 60 8 S 80 0, 100 4 L100 100 0 100Z" fill="%23A0522D" opacity="0.4"/></svg>');
+                background-size: 100% 100%;
+            }
+            .grass {
+                position: absolute;
+                bottom: 30px;
+                width: 100%;
+                height: calc(100% - 30px);
+                background: linear-gradient(to top, rgba(26, 74, 26, 0.9), rgba(46, 139, 87, 0.9));
+            }
+            .grass-svg {
+                position: absolute;
+                bottom: 30px;
+                left: 0;
+                width: 100%;
+                height: calc(100% - 30px);
+            }
+            .blade {
+                animation: sway 5s ease-in-out infinite;
+                transform-origin: 50% 100%;
+            }
+            .blade-front {
+                animation: sway-front 4s ease-in-out infinite;
+                transform-origin: 50% 100%;
+            }
+            @keyframes sway {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(4deg); }
+                75% { transform: rotate(-4deg); }
+            }
+            @keyframes sway-front {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(6deg); }
+                75% { transform: rotate(-6deg); }
+            }
+            .pebble {
+                position: absolute;
+                bottom: 0;
+                width: 4px;
+                height: 4px;
+                background: rgba(210, 180, 140, 0.7);
+                border-radius: 50%;
+                opacity: 0.7;
+            }
+            .flower {
+                position: absolute;
+                bottom: 30px;
+                width: 8px;
+                height: 8px;
+                background: radial-gradient(circle, rgba(255, 105, 180, 0.8), rgba(255, 20, 147, 0.8));
+                border-radius: 50%;
+                box-shadow: 0 0 2px rgba(255, 105, 180, 0.8);
+            }
+            .flower::before {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 3px;
+                width: 2px;
+                height: 12px;
+                background: rgba(34, 139, 34, 0.8);
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            .fly {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: black;
+                border-radius: 50%;
+                animation: fly-natural 15s linear infinite;
+            }
+            @keyframes fly-natural {
+                0%, 100% { transform: translate(0, 0); }
+                10% { transform: translate(100px, -50px); }
+                20% { transform: translate(200px, 0px); }
+                30% { transform: translate(150px, 100px); }
+                40% { transform: translate(0px, 150px); }
+                50% { transform: translate(-100px, 100px); }
+                60% { transform: translate(-200px, 0px); }
+                70% { transform: translate(-150px, -100px); }
+                80% { transform: translate(-50px, -150px); }
+                90% { transform: translate(50px, -100px); }
+            }
+            .fly-pointy {
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-left: 2px solid transparent;
+                border-right: 2px solid transparent;
+                border-bottom: 4px solid black;
+                animation: fly-natural-pointy 18s linear infinite;
+            }
+            @keyframes fly-natural-pointy {
+                0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                12.5% { transform: translate(-120px, 80px) rotate(45deg); }
+                25% { transform: translate(-180px, -40px) rotate(90deg); }
+                37.5% { transform: translate(-60px, -140px) rotate(135deg); }
+                50% { transform: translate(100px, -100px) rotate(180deg); }
+                62.5% { transform: translate(180px, 20px) rotate(225deg); }
+                75% { transform: translate(140px, 140px) rotate(270deg); }
+                87.5% { transform: translate(20px, 180px) rotate(315deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="title">Joshua Web Math</div>
+        <div class="button-container">
+            <button class="quarter-button" data-page="earthload/index1.html">1ST QUARTER</button>
+            <button class="quarter-button" data-page="earthload/index2.html">2ND QUARTER</button>
+            <button class="quarter-button" data-page="earthload/index3.html">3RD QUARTER</button>
+            <button class="quarter-button" data-page="earthload/index4.html">4TH QUARTER</button>
+        </div>
+        <div class="sun"></div>
+        <div class="cloud-container"></div>
+        <div class="grass-container">
+            <div class="ground" id="ground"></div>
+            <div class="grass"></div>
+            <svg class="grass-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+                <g class="blade-group"></g>
+                <g class="blade-group-front"></g>
+            </svg>
+        </div>
+        <div class="fly" style="top: 20%; left: 20%;"></div>
+        <div class="fly" style="top: 40%; left: 40%;"></div>
+        <div class="fly-pointy" style="top: 60%; left: 60%;"></div>
+
+        <script>
+            // Function to create grass blades
+            function createGrass() {
+                const bladeGroup = document.querySelector('.blade-group');
+                const bladeGroupFront = document.querySelector('.blade-group-front');
+                bladeGroup.innerHTML = '';
+                bladeGroupFront.innerHTML = '';
+                const bladeCount = Math.floor(window.innerWidth / 10);
+
+                // Function to create a single blade of grass
+                function createBlade(group, isFront) {
+                    const blade = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const height = 30 + Math.random() * 30;
+                    const width = 3 + Math.random() * 4; // Increased width for wider blades
+                    const x = Math.random() * 1000;
+                    const hue = 70 + Math.random() * 50;
+                    const saturation = 60 + Math.random() * 20;
+                    const lightness = 20 + Math.random() * 20;
+
+                    // Modified control points for pointier grass
+                    const controlPoint1 = `${x + width},${100 - height * 0.7}`;
+                    const controlPoint2 = `${x - width},${100 - height * 0.9}`;
+                    const endPoint = `${x},${100 - height}`;
+
+                    blade.setAttribute('d', `M${x},100 C${controlPoint1} ${controlPoint2} ${endPoint}`);
+                    blade.setAttribute('fill', `hsla(${hue}, ${saturation}%, ${lightness}%, 0.8)`);
+                    blade.classList.add(isFront ? 'blade-front' : 'blade');
+                    blade.style.animationDelay = `${Math.random() * 5}s`;
+
+                    group.appendChild(blade);
+                }
+
+                for (let i = 0; i < bladeCount; i++) {
+                    createBlade(bladeGroup, false);
+                    if (i % 3 === 0) {
+                        createBlade(bladeGroupFront, true);
+                    }
+                }
+            }
+
+            // Function to add natural elements like pebbles and flowers
+            function addNaturalElements() {
+                const ground = document.getElementById('ground');
+                const grassContainer = document.querySelector('.grass-container');
+                const pebbleCount = Math.floor(window.innerWidth / 20);
+                const flowerCount = Math.floor(window.innerWidth / 300);
+
+                // Create pebbles
+                for (let i = 0; i < pebbleCount; i++) {
+                    const pebble = document.createElement('div');
+                    pebble.className = 'pebble';
+                    pebble.style.left = `${Math.random() * 100}%`;
+                    pebble.style.bottom = `${Math.random() * 15}px`;
+                    pebble.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+                    ground.appendChild(pebble);
+                }
+
+                // Create flowers
+                for (let i = 0; i < flowerCount; i++) {
+                    const flower = document.createElement('div');
+                    flower.className = 'flower';
+                    flower.style.left = `${Math.random() * 100}%`;
+                    flower.style.bottom = `${Math.random() * 20 + 30}px`;
+                    flower.style.transform = `scale(${Math.random() * 0.5 + 0.75})`;
+                    grassContainer.appendChild(flower);
+                }
+            }
+
+            // Function to create clouds
+            function createClouds() {
+                const cloudContainer = document.querySelector('.cloud-container');
+                const cloudCount = 4;
+
+                // Create multiple clouds
+                for (let i = 0; i < cloudCount; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    cloud.style.left = `${-150 - i * 200}px`;
+                    cloud.style.top = `${Math.random() * 20 + 5}%`;
+                    cloud.style.animationDelay = `${i * 5}s`;
+                    cloud.style.left = `${-150 - i * 200}px`; // Start off-screen
+                    cloud.style.top = `${Math.random() * 20 + 5}%`; // Random vertical position
+                    cloud.style.animationDelay = `${i * 5}s`; // Stagger animations
+                    cloud.style.opacity = `${Math.random() * 0.3 + 0.7}`; // Random opacity
+                    cloud.style.transform = `scale(${Math.random() * 0.5 + 0.75})`; // Random size
+                    cloudContainer.appendChild(cloud);
+                }
+            }
+
+            createGrass();
+            addNaturalElements();
+            createClouds();
+
+            // Responsive design: recreate elements on window resize
+            window.addEventListener('resize', () => {
+                createGrass();
+                document.getElementById('ground').innerHTML = '';
+                document.querySelectorAll('.flower').forEach(f => f.remove());
+                addNaturalElements();
+            });
+
+            // Add event listeners to buttons to navigate to the respective pages
+            document.querySelectorAll('.quarter-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const page = event.target.getAttribute('data-page');
+                    window.location.href = page;
+                });
+            });
+        </script>
+    </body>
+    </html>

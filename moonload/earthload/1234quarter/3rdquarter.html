@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3rd Quarter</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #6a5acd, #00ced1, #ffa07a);
+            font-family: 'Poppins', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        .container {
+            text-align: center;
+            z-index: 1;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in-out;
+            font-weight: 600;
+            font-size: 2rem;
+        }
+        .box {
+            background: linear-gradient(135deg, #87CEFA, #00BFFF);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: scaleIn 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        .button:hover, .button:active {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .side-menu {
+            position: fixed;
+            left: -270px;
+            top: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(0, 206, 209, 0.9));
+            transition: left 0.3s ease-in-out;
+            padding: 20px;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 2;
+        }
+        .side-menu:hover, .side-menu.active {
+            left: 0;
+        }
+        .menu-item {
+            display: block;
+            margin: 15px 0;
+            padding: 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 400;
+        }
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        .main-menu {
+            margin-top: 30px;
+        }
+        .title {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #4682B4, #1E90FF);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 3;
+        }
+        .title.active, .side-menu:hover ~ .title {
+            transform: translateX(290px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .side-menu-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title" onclick="toggleMenu()">Show</div>
+    <div class="side-menu">
+        <div class="side-menu-title">Joshua</div>
+        <a href="1stquarter.html" class="menu-item">1st Quarter</a>
+        <a href="2ndquarter.html" class="menu-item">2nd Quarter</a>
+        <a href="3rdquarter.html" class="menu-item">3rd Quarter</a>
+        <a href="4thquarter.html" class="menu-item">4th Quarter</a>
+        <a href="index.html" class="menu-item main-menu">Main Menu</a>
+    </div>
+    <div class="container">
+        <h1>3rd Quarter</h1>
+        <div class="box">
+            <h2 class="box-title">Content</h2>
+            <a href="#" class="button" id="content">Coming Soon</a>
+        </div>
+    </div>
+    <script>
+        let menuActive = false;
+
+        function toggleMenu() {
+            const menu = document.querySelector('.side-menu');
+            const title = document.querySelector('.title');
+            menuActive = !menuActive;
+            if (menuActive) {
+                menu.classList.add('active');
+                title.classList.add('active');
+                title.textContent = 'Unshow';
+            } else {
+                menu.classList.remove('active');
+                title.classList.remove('active');
+                title.textContent = 'Show';
+            }
+        }
+
+        // Add event listeners for hover effect
+        const sideMenu = document.querySelector('.side-menu');
+        const title = document.querySelector('.title');
+
+        sideMenu.addEventListener('mouseenter', () => {
+            sideMenu.classList.add('active');
+            title.classList.add('active');
+        });
+
+        sideMenu.addEventListener('mouseleave', () => {
+            if (!menuActive) {
+                sideMenu.classList.remove('active');
+                title.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

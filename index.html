@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Passcode</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #000000, #0c0c2c);
+            overflow: hidden;
+        }
+        .container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+            height: 100vh; /* Set container height to viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 3em;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .star, .blade, .firefly {
+            position: absolute;
+            will-change: transform, opacity;
+        }
+        .star {
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+            opacity: 0.2;
+        }
+        .nebula {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 40%);
+            opacity: 0.5;
+        }
+        .grass {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+        .blade {
+            bottom: 0;
+            width: 10px;
+            height: 100px;
+            background: linear-gradient(to top, #1a4a1a, #063806);
+            transform-origin: bottom center;
+            animation: sway 4s ease-in-out infinite;
+            clip-path: polygon(50% 0%, 40% 30%, 0% 100%, 100% 100%, 60% 30%);
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        .firefly {
+            width: 3px;
+            height: 3px;
+            background: #ffff00;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #ffff00, 0 0 8px #ffff00;
+            opacity: 1;
+        }
+        @keyframes move {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(100px, -50px); }
+            50% { transform: translate(200px, 0); }
+            75% { transform: translate(100px, 50px); }
+        }
+        .moon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            background: url(./moon.jpg);
+            background-repeat: repeat-x;
+            background-size: cover;
+            animation: moon-rotation 90s linear infinite;
+            box-shadow: inset 60px 0 40px rgba(255, 255, 255, 0.5),
+                        inset 160px 0 60px rgba(255, 255, 255, 0.7),
+                        inset -160px 0 60px rgba(255, 255, 255, 0.3);
+        }
+        .moon:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            width: 95px;
+            height: 95px;
+            box-shadow: -60px 0 50px rgba(255, 255, 255, 0.5);
+        }
+        @keyframes moon-rotation {
+            from {background-position: -100px center;}
+            to {background-position: 96px center;}
+        }
+        @media screen and (max-width: 500px) {
+            .moon {
+                width: 50px;
+                height: 50px;
+            }
+            .moon:before {
+                width: 45px;
+                height: 45px;
+                box-shadow: -60px 0 50px rgba(255, 255, 255, 0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nebula"></div>
+    <div class="moon"></div> <!-- Added moon here -->
+    <div class="moon-reflection"></div>
+    <div class="grass" id="grass"></div>
+    <div class="container">
+        <h1>MATH</h1>
+        <div class="box">
+            <input type="password" id="passcode" placeholder="Enter passcode">
+            <br>
+            <button id="submitButton">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        const passcodeInput = document.getElementById('passcode');
+        const submitButton = document.getElementById('submitButton');
+
+        submitButton.addEventListener('click', checkPasscode);
+        passcodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPasscode();
+        });
+
+        function checkPasscode() {
+            if (passcodeInput.value === '123') {
+                // Redirect to blank.html
+                window.location.href = 'moonload/moonloading.html';
+            } else {
+                alert('Incorrect passcode. Please try again.');
+            }
+        }
+
+        function createElements(count, className, parentElement, customizeFunc) {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < count; i++) {
+                const element = document.createElement('div');
+                element.className = className;
+                customizeFunc(element, i);
+                fragment.appendChild(element);
+            }
+            parentElement.appendChild(fragment);
+        }
+
+        createElements(100, 'star', document.body, (star) => {
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+        });
+
+        createElements(50, 'blade', document.getElementById('grass'), (blade) => {
+            blade.style.left = `${Math.random() * 100}%`;
+            blade.style.height = `${Math.random() * 80 + 40}px`;
+            blade.style.width = `${Math.random() * 6 + 4}px`;
+            blade.style.animationDelay = `${Math.random() * 4}s`;
+            
+            const curve = Math.random() * 15 + 10;
+            blade.style.clipPath = `polygon(
+                50% 0%,
+                ${50 - curve}% 30%,
+                0% 100%,
+                100% 100%,
+                ${50 + curve}% 30%
+            )`;
+        });
+
+        createElements(10, 'firefly', document.body, (firefly) => {
+            firefly.style.top = `${Math.random() * 100}%`;
+            firefly.style.left = `${Math.random() * 100}%`;
+            const duration = Math.random() * 10 + 5;
+            firefly.style.animation = `move ${duration}s infinite alternate ease-in-out`;
+        });
+
+        const stars = document.querySelectorAll('.star');
+        let lastTwinkleTime = 0;
+        const twinkleInterval = 500;
+
+        function twinkleStars(timestamp) {
+            if (timestamp - lastTwinkleTime > twinkleInterval) {
+                stars.forEach(star => {
+                    star.style.opacity = Math.random() * 0.8 + 0.2;
+                });
+                lastTwinkleTime = timestamp;
+            }
+            requestAnimationFrame(twinkleStars);
+        }
+
+        requestAnimationFrame(twinkleStars);
+
+        // Prevent screen shake on mobile
+        window.addEventListener('scroll', (e) => {
+            e.preventDefault();
+            window.scrollTo(0, 0);
+        });
+    </script>
+</body>
+</html>
